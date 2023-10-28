@@ -25,7 +25,7 @@ pub fn setup(
     force_n_bits: usize,
 ) -> Result<()> {
     // 0. readR1cs
-    let r1cs = R1CS::load_r1cs::<GL>(r1cs_file);
+    let r1cs = R1CS::<GL>::load_r1cs(r1cs_file);
     let opts = Options {
         force_bits: force_n_bits,
     };

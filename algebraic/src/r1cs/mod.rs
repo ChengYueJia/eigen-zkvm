@@ -3,6 +3,7 @@ pub(crate) mod custom_gate;
 pub(crate) mod header;
 pub(crate) mod r1cs_file;
 mod utils;
+pub use constraint::*;
 
 use crate::bellman_ce::{PrimeField, ScalarEngine};
 
