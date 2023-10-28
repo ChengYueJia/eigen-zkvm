@@ -11,6 +11,8 @@ use crate::bellman_ce::{
     pairing::Engine,
     Field, PrimeField, PrimeFieldRepr, ScalarEngine,
 };
+use crate::r1cs::r1cs_file::R1CSFile;
+use crate::r1cs::{CircuitJson, R1CS};
 
 /// get universal setup file by filename
 fn get_universal_setup_file_buff_reader(setup_file_name: &str) -> Result<BufReader<File>> {
@@ -211,7 +213,7 @@ fn load_r1cs_from_bin_file<E: ScalarEngine>(filename: &str) -> (R1CS<E>, Vec<usi
 
 /// load r1cs from bin by a reader
 pub fn load_r1cs_from_bin<R: Read + Seek, E: ScalarEngine>(reader: R) -> (R1CS<E>, Vec<usize>) {
-    let file = crate::r1cs_file::from_reader::<R, E>(reader).expect("unable to read.");
+    let file = R1CSFile::r1cs_file::from_reader::<R, E>(reader).expect("unable to read.");
     let num_inputs = (1 + file.header.n_pub_in + file.header.n_pub_out) as usize;
     let num_variables = file.header.n_wires as usize;
     let num_aux = num_variables - num_inputs;
