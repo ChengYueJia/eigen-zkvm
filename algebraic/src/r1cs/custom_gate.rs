@@ -1,5 +1,6 @@
 use crate::bellman_ce::ScalarEngine;
-use crate::r1cs::utils::read_field;
+use crate::r1cs::header::Header;
+use crate::r1cs::utils::*;
 use byteorder::{LittleEndian, ReadBytesExt};
 use std::io::{Read, Result};
 
@@ -11,25 +12,10 @@ pub struct CustomGates<E: ScalarEngine> {
 }
 
 impl<E: ScalarEngine> CustomGates<E> {
-    // TODO: why does the `read_to_end` not work?
-    pub fn read_to_string<R: Read>(mut reader: R) -> String {
-        let mut name_buf = vec![1u8; 1];
-        let mut buf = vec![];
-        loop {
-            let name_size_res = reader.read_exact(&mut name_buf);
-            if name_buf[0] != 0 {
-                buf.push(name_buf[0]);
-            } else {
-                break;
-            }
-        }
-        String::from_utf8_lossy(&buf).to_string()
-    }
-
-    pub fn read_custom_gates_list<R: Read, E: ScalarEngine>(
+    pub fn read_custom_gates_list<R: Read>(
         mut reader: R,
-        size: u64,
-        header: &Header,
+        _size: u64,
+        _header: &Header,
     ) -> Result<Vec<CustomGates<E>>> {
         let num = reader.read_u32::<LittleEndian>()?;
         let mut custom_gates: Vec<CustomGates<E>> = vec![];

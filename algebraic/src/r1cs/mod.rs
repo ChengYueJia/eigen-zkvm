@@ -40,7 +40,7 @@ pub struct CircuitJson {
 
 impl<E: ScalarEngine> R1CS<E> {
     /// load r1cs file by filename with autodetect encoding (bin or json)
-    pub fn load_r1cs<E: ScalarEngine>(filename: &str) -> R1CS<E> {
+    pub fn load_r1cs(filename: &str) -> R1CS<E> {
         if filename.ends_with("json") {
             R1CS::load_r1cs_from_json_file(filename)
         } else {
@@ -50,7 +50,7 @@ impl<E: ScalarEngine> R1CS<E> {
     }
 
     /// load r1cs from json file by filename
-    fn load_r1cs_from_json_file<E: ScalarEngine>(filename: &str) -> R1CS<E> {
+    fn load_r1cs_from_json_file(filename: &str) -> R1CS<E> {
         let reader = OpenOptions::new()
             .read(true)
             .open(filename)
@@ -59,7 +59,7 @@ impl<E: ScalarEngine> R1CS<E> {
     }
 
     /// load r1cs from json by a reader
-    fn load_r1cs_from_json<E: ScalarEngine, R: Read>(reader: R) -> R1CS<E> {
+    fn load_r1cs_from_json<R: Read>(reader: R) -> R1CS<E> {
         let circuit_json: CircuitJson = serde_json::from_reader(reader).expect("unable to read.");
 
         let num_inputs = circuit_json.num_inputs + circuit_json.num_outputs + 1;
@@ -95,7 +95,7 @@ impl<E: ScalarEngine> R1CS<E> {
     }
 
     /// load r1cs from bin file by filename
-    fn load_r1cs_from_bin_file<E: ScalarEngine>(filename: &str) -> (R1CS<E>, Vec<usize>) {
+    fn load_r1cs_from_bin_file(filename: &str) -> (R1CS<E>, Vec<usize>) {
         let reader = OpenOptions::new()
             .read(true)
             .open(filename)
@@ -104,8 +104,8 @@ impl<E: ScalarEngine> R1CS<E> {
     }
 
     /// load r1cs from bin by a reader
-    pub fn load_r1cs_from_bin<R: Read + Seek, E: ScalarEngine>(reader: R) -> (R1CS<E>, Vec<usize>) {
-        let file = R1CSFile::from_reader::<R, E>(reader).expect("unable to read.");
+    pub fn load_r1cs_from_bin<R: Read + Seek>(reader: R) -> (R1CS<E>, Vec<usize>) {
+        let file = R1CSFile::from_reader(reader).expect("unable to read.");
         let num_inputs = (1 + file.header.n_pub_in + file.header.n_pub_out) as usize;
         let num_variables = file.header.n_wires as usize;
         let num_aux = num_variables - num_inputs;

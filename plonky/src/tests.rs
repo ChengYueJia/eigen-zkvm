@@ -1,7 +1,7 @@
 use crate::bellman_ce::bn256::Bn256;
 use crate::circom_circuit::CircomCircuit;
 use crate::{plonk, reader};
-use algebraic::reader::load_r1cs;
+use algebraic::r1cs::R1CS;
 use std::fs;
 
 const CIRCUIT_FILE: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../test/multiplier.r1cs");
@@ -16,7 +16,7 @@ const CIRCUIT_ANALYZE_RESULT: &str = r#"{"num_inputs":2,"num_aux":2,"num_variabl
 #[test]
 fn test_analyze() {
     let circuit = CircomCircuit::<Bn256> {
-        r1cs: load_r1cs(CIRCUIT_FILE),
+        r1cs: R1CS::load_r1cs(CIRCUIT_FILE),
         witness: None,
         wire_mapping: None,
         aux_offset: plonk::AUX_OFFSET,

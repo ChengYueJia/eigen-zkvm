@@ -50,7 +50,7 @@ impl<E: ScalarEngine> R1CSFile<E> {
         Ok(vec)
     }
 
-    pub fn from_reader<R: Read + Seek, E: ScalarEngine>(mut reader: R) -> Result<R1CSFile<E>> {
+    pub fn from_reader<R: Read + Seek>(mut reader: R) -> Result<R1CSFile<E>> {
         let mut magic = [0u8; 4];
         reader.read_exact(&mut magic)?;
         if magic != [0x72, 0x31, 0x63, 0x73] {
@@ -142,7 +142,7 @@ impl<E: ScalarEngine> R1CSFile<E> {
             reader.seek(SeekFrom::Start(
                 *section_offsets.get(&CUSTOM_GATES_USE).unwrap(),
             ))?;
-            custom_gates_uses = CustomGates::read_custom_gates_uses_list(
+            custom_gates_uses = CustomGatesUses::read_custom_gates_uses_list(
                 &mut reader,
                 *section_sizes.get(&CUSTOM_GATES_USE).unwrap(),
                 &header,

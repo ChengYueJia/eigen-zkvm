@@ -12,8 +12,6 @@ use crate::bellman_ce::{
     Field, PrimeField, PrimeFieldRepr, ScalarEngine,
 };
 
-use crate::circom_circuit::{CircuitJson, R1CS};
-
 /// get universal setup file by filename
 fn get_universal_setup_file_buff_reader(setup_file_name: &str) -> Result<BufReader<File>> {
     let setup_file = File::open(setup_file_name).map_err(|e| {
