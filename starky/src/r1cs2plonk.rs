@@ -2,7 +2,7 @@
 use array_tool::vec::Shift;
 use plonky::field_gl::Fr as FGL;
 use plonky::field_gl::{Fr, GL};
-use plonky::r1cs::{Constraint, R1CS};
+use plonky::r1cs::{constraint::Constraint, R1CS};
 use std::collections::BTreeMap;
 use std::ops::Neg;
 
