@@ -1,4 +1,4 @@
-pub(crate) mod constraint;
+pub mod constraint;
 pub(crate) mod custom_gate;
 pub(crate) mod header;
 pub(crate) mod r1cs_file;
