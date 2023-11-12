@@ -272,7 +272,6 @@ pub fn from_reader<R: Read + Seek, E: ScalarEngine>(mut reader: R) -> Result<R1C
         custom_gates_uses = read_custom_gates_uses_list(
             &mut reader,
             *section_sizes.get(&CUSTOM_GATES_USE).unwrap(),
-            &header,
         )?;
     }
 
