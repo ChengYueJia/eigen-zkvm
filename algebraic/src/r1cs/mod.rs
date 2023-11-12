@@ -1,20 +1,19 @@
-pub(crate) mod constraint;
+pub mod constraint;
 pub(crate) mod custome_gate;
 pub(crate) mod header;
 pub(crate) mod r1cs_file;
 pub(crate) mod utils;
 
-use crate::bellman_ce::{Field, PrimeField, PrimeFieldRepr, ScalarEngine};
+use crate::bellman_ce::{PrimeField, ScalarEngine};
 use crate::r1cs::constraint::Constraint;
 use crate::r1cs::custome_gate::{CustomGates, CustomGatesUses};
 use crate::r1cs::r1cs_file::R1CSFile;
-use byteorder::{LittleEndian, ReadBytesExt};
 use itertools::Itertools;
 use std::fs::OpenOptions;
 use std::io::BufReader;
 use std::{
     collections::BTreeMap,
-    io::{Error, ErrorKind, Read, Result, Seek, SeekFrom},
+    io::{Read, Seek},
 };
 
 #[derive(Serialize, Deserialize)]

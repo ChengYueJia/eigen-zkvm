@@ -3,7 +3,7 @@ use crate::compressor12::plonk_setup::PlonkSetup;
 use crate::errors::EigenError;
 use crate::io_utils::write_vec_to_file;
 use crate::r1cs2plonk::PlonkAdd;
-use algebraic::reader::load_r1cs;
+use algebraic::r1cs::R1CS;
 use plonky::field_gl::GL;
 use std::fs::File;
 use std::io::Write;
@@ -25,7 +25,7 @@ pub fn setup(
     force_n_bits: usize,
 ) -> Result<()> {
     // 0. readR1cs
-    let r1cs = load_r1cs::<GL>(r1cs_file);
+    let r1cs = R1CS::<GL>::load_r1cs(r1cs_file);
     let opts = Options {
         force_bits: force_n_bits,
     };

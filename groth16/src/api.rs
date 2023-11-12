@@ -13,7 +13,7 @@ use algebraic::{
     bellman_ce::Engine,
     circom_circuit::CircomCircuit,
     errors::{EigenError, Result},
-    reader::load_r1cs,
+    r1cs::R1CS,
     witness::{load_input_for_witness, WitnessCalculator},
     Field, PrimeField,
 };
@@ -161,7 +161,7 @@ fn create_circuit_from_file<E: Engine>(
     witness: Option<Vec<E::Fr>>,
 ) -> CircomCircuit<E> {
     CircomCircuit {
-        r1cs: load_r1cs(circuit_file),
+        r1cs: R1CS::load_r1cs(circuit_file),
         witness,
         wire_mapping: None,
         aux_offset: 0,
