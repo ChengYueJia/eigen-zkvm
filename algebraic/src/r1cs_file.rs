@@ -71,10 +71,7 @@ fn read_header<R: Read>(mut reader: R, size: u64) -> Result<Header> {
     })
 }
 
-fn read_constraint_vec<R: Read, E: ScalarEngine>(
-    mut reader: R,
-    header: &Header,
-) -> Result<Vec<(usize, E::Fr)>> {
+fn read_constraint_vec<R: Read, E: ScalarEngine>(mut reader: R) -> Result<Vec<(usize, E::Fr)>> {
     let n_vec = reader.read_u32::<LittleEndian>()? as usize;
     let mut vec = Vec::with_capacity(n_vec);
     for _ in 0..n_vec {
@@ -90,16 +87,15 @@ fn read_constraint_vec<R: Read, E: ScalarEngine>(
 
 fn read_constraints<R: Read, E: ScalarEngine>(
     mut reader: R,
-    size: u64,
-    header: &Header,
+    size: u32,
 ) -> Result<Vec<Constraint<E>>> {
     // todo check section size
-    let mut vec = Vec::with_capacity(header.n_constraints as usize);
-    for _ in 0..header.n_constraints {
+    let mut vec = Vec::with_capacity(size as usize);
+    for _ in 0..size {
         vec.push((
-            read_constraint_vec::<&mut R, E>(&mut reader, header)?,
-            read_constraint_vec::<&mut R, E>(&mut reader, header)?,
-            read_constraint_vec::<&mut R, E>(&mut reader, header)?,
+            read_constraint_vec::<&mut R, E>(&mut reader)?,
+            read_constraint_vec::<&mut R, E>(&mut reader)?,
+            read_constraint_vec::<&mut R, E>(&mut reader)?,
         ));
     }
     Ok(vec)
@@ -140,11 +136,7 @@ fn read_to_string<R: Read>(mut reader: R) -> String {
     String::from_utf8_lossy(&buf).to_string()
 }
 
-fn read_custom_gates_list<R: Read, E: ScalarEngine>(
-    mut reader: R,
-    size: u64,
-    header: &Header,
-) -> Result<Vec<CustomGates<E>>> {
+fn read_custom_gates_list<R: Read, E: ScalarEngine>(mut reader: R) -> Result<Vec<CustomGates<E>>> {
     let num = reader.read_u32::<LittleEndian>()?;
     let mut custom_gates: Vec<CustomGates<E>> = vec![];
     for i in 0..num {
@@ -163,11 +155,7 @@ fn read_custom_gates_list<R: Read, E: ScalarEngine>(
     Ok(custom_gates)
 }
 
-fn read_custom_gates_uses_list<R: Read>(
-    mut reader: R,
-    size: u64,
-    header: &Header,
-) -> Result<Vec<CustomGatesUses>> {
+fn read_custom_gates_uses_list<R: Read>(mut reader: R, size: u64) -> Result<Vec<CustomGatesUses>> {
     let mut custom_gates_uses: Vec<CustomGatesUses> = vec![];
 
     let sz = size as usize / 4;
@@ -258,11 +246,7 @@ pub fn from_reader<R: Read + Seek, E: ScalarEngine>(mut reader: R) -> Result<R1C
     reader.seek(SeekFrom::Start(
         *section_offsets.get(&CONSTRAINT_TYPE).unwrap(),
     ))?;
-    let constraints = read_constraints::<&mut R, E>(
-        &mut reader,
-        *section_sizes.get(&CONSTRAINT_TYPE).unwrap(),
-        &header,
-    )?;
+    let constraints = read_constraints::<&mut R, E>(&mut reader, header.n_constraints)?;
 
     reader.seek(SeekFrom::Start(
         *section_offsets.get(&WIRE2LABEL_TYPE).unwrap(),
@@ -277,11 +261,7 @@ pub fn from_reader<R: Read + Seek, E: ScalarEngine>(mut reader: R) -> Result<R1C
         reader.seek(SeekFrom::Start(
             *section_offsets.get(&CUSTOM_GATES_LIST).unwrap(),
         ))?;
-        custom_gates = read_custom_gates_list(
-            &mut reader,
-            *section_sizes.get(&CUSTOM_GATES_LIST).unwrap(),
-            &header,
-        )?;
+        custom_gates = read_custom_gates_list(&mut reader)?;
     }
 
     let mut custom_gates_uses: Vec<CustomGatesUses> = vec![];
