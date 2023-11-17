@@ -70,7 +70,7 @@ impl Poseidon {
     }
 
     #[inline(always)]
-    fn pow7(x: &mut FGL) {
+    pub(crate) fn pow7(x: &mut FGL) {
         let aux = *x;
         x.square();
         x.mul_assign(&aux);
@@ -79,7 +79,7 @@ impl Poseidon {
     }
 
     #[inline(always)]
-    fn pow7_avx2(x: &mut Avx2GoldilocksField) {
+    pub(crate) fn pow7_avx2(x: &mut Avx2GoldilocksField) {
         let aux = *x;
         *x = x.square();
         *x *= aux;
@@ -91,7 +91,7 @@ impl Poseidon {
         self.hash_inner(inp, init_state, out)
     }
 
-    fn hash_inner(
+    pub(crate) fn hash_inner(
         &self,
         inp: &Vec<FGL>,
         init_state: &[FGL],
