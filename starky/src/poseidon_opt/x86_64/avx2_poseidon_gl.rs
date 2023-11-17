@@ -289,7 +289,7 @@ impl Poseidon {
 
 #[cfg(test)]
 mod tests {
-    use crate::arch::x86_64::avx2_poseidon_gl::*;
+    use super::*;
     use algebraic::arch::x86_64::avx2_field_gl::Avx2GoldilocksField;
     use algebraic::packed::PackedField;
     use plonky::field_gl::Fr as FGL;
