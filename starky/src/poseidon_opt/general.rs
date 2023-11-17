@@ -222,6 +222,7 @@ impl Poseidon {
 #[cfg(test)]
 mod tests {
     use crate::poseidon_opt::*;
+    use ark_std::{end_timer, start_timer};
     use plonky::field_gl::Fr as FGL;
     use rand::Rand;
 
@@ -239,7 +240,11 @@ mod tests {
         let poseidon = Poseidon::new();
         let input = vec![FGL::ZERO; 8];
         let state = vec![FGL::ZERO; 4];
+
+        let start = start_timer!(|| "poseidon hash");
         let res = poseidon.hash(&input, &state, 4).unwrap();
+        end_timer!(start);
+
         let expected = vec![
             FGL::from(0x3c18a9786cb0b359u64),
             FGL::from(0xc4055e3364a246c3u64),
