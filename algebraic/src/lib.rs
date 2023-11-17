@@ -31,6 +31,7 @@ pub use bellman_ce::pairing::ff;
 pub use ff::*;
 pub use franklin_crypto::bellman as bellman_ce;
 
+pub mod fft;
 #[cfg(test)]
 mod field_gl_test;
 

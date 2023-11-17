@@ -53,6 +53,10 @@ pub fn load_constants() -> Constants {
     }
 }
 
+#[cfg(target_feature = "avx2")]
+pub use crate::arch::x86_64::avx2_poseidon_gl::Poseidon;
+
+#[cfg(not(target_feature = "avx2"))]
 pub struct Poseidon;
 
 impl Default for Poseidon {
